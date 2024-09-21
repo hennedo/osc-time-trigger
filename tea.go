@@ -267,6 +267,7 @@ func (m model) View() string {
 	clock := lipgloss.NewStyle().
 		Align(lipgloss.Center).
 		Width(m.width).
+		Bold(true).BorderBottom(true).
 		Render(m.clock.View())
 	b.WriteString(clock)
 	b.WriteRune('\n')
