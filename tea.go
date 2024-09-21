@@ -48,6 +48,7 @@ type model struct {
 	displaySaved     int
 	configChanged    bool
 	showCloseConfirm bool
+	editIndex        int
 }
 
 type TickMsg time.Time
@@ -186,11 +187,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmds = append(cmds, cmd)
 				case 3:
 					tp := TriggerFromString(m.inputs[2].Value(), m.inputs[3].Value())
-					m.triggers.AddPoint(tp)
+					if m.editIndex >= 0 {
+						m.triggers.SetPoint(m.editIndex, tp)
+						m.editIndex = -1
+					} else {
+						m.triggers.AddPoint(tp)
+					}
 					m.configChanged = true
 					m, cmd = m.focusInput(-1)
 					cmds = append(cmds, cmd)
 					m.table.SetRows(m.triggers.ToRows())
+					m.inputs[2].SetValue("")
+					m.inputs[3].SetValue("")
 				}
 			case key.Matches(msg, m.keys.Esc):
 				switch m.focusIndex {
@@ -199,6 +207,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				case 1:
 					m.inputs[1].SetValue(strconv.Itoa(m.port))
 				}
+				m.editIndex = -1
+				m.inputs[2].SetValue("")
+				m.inputs[3].SetValue("")
 				m, cmd = m.focusInput(-1)
 				cmds = append(cmds, cmd)
 			}
@@ -239,6 +250,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.Save):
 			m.displaySaved = 2
 			m.save()
+		case key.Matches(msg, m.keys.Edit):
+			m.editIndex = m.table.Cursor()
+			m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)
+			m.inputs[3].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Time.Format("15:04:05"))
+			m, cmd = m.focusInput(2)
+			cmds = append(cmds, cmd)
 		case key.Matches(msg, m.keys.Copy):
 			if len(m.triggers.GetTriggers()) > 0 {
 				m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)

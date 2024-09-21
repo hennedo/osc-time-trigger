@@ -72,6 +72,12 @@ func (t *Triggers) RemovePoint(index int) {
 	}
 }
 
+func (t *Triggers) SetPoint(index int, tp TriggerPoint) {
+	t.lock.Lock()
+	defer t.lock.Unlock()
+	t.points[index] = tp
+}
+
 func (t *Triggers) GetTriggers() []TriggerPoint {
 	t.lock.RLock()
 	defer t.lock.RUnlock()

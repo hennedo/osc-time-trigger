@@ -81,7 +81,7 @@ func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Enter, k.Esc, k.Up, k.Down},
 		{k.Host, k.Port, k.Trigger, k.Copy}, // first column
-		{k.Save, k.Help, k.Quit},            // second column
+		{k.Edit, k.Save, k.Help, k.Quit},    // second column
 	}
 }
 
