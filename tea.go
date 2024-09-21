@@ -239,6 +239,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.Save):
 			m.displaySaved = 2
 			m.save()
+		case key.Matches(msg, m.keys.Copy):
+			if len(m.triggers.GetTriggers()) > 0 {
+				m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)
+				m.inputs[3].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Time.Format("15:04:05"))
+				m, cmd = m.focusInput(2)
+				cmds = append(cmds, cmd)
+			}
 		case key.Matches(msg, m.keys.Delete):
 			if len(m.triggers.GetTriggers()) > 0 {
 				m.triggers.RemovePoint(m.table.Cursor())
