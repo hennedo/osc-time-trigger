@@ -1,0 +1,5 @@
+osctimedtrigger*
+osctrigger_config.yaml
+*.swp
+debug.log
+.DS_Store
