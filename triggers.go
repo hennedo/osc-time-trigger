@@ -124,7 +124,7 @@ func (t *Triggers) ToRows() []table.Row {
 		if t.points[i].Done {
 			dne = "x"
 		}
-		trs[i] = []string{t.points[i].Time.Format("15:04:05"), t.points[i].Path, dne}
+		trs[i] = []string{t.points[i].Time.Format("02.01.06 - 15:04:05"), t.points[i].Path, dne}
 	}
 	return trs
 }

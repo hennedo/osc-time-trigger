@@ -7,6 +7,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+var version = "0.1.0"
+
 var lf *os.File
 
 func LOG(text string) {

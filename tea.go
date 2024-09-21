@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"example.com/clock"
-	"example.com/input"
 	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/hennedo/osc-time-trigger/clock"
+	"github.com/hennedo/osc-time-trigger/input"
 )
 
 var (
@@ -24,7 +24,7 @@ var (
 	focusedButton = focusedStyle.Render("[ Submit ]")
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Submit"))
 	cols          = []table.Column{
-		{Title: "Time", Width: 8},
+		{Title: "Time", Width: 19},
 		{Title: "Path", Width: 20},
 		{Title: "Done", Width: 4},
 	}
@@ -156,8 +156,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// its view as needed.
 		m.help.Width = msg.Width
 		m.width = msg.Width
-		cols[1].Width = msg.Width - 18
-		m.table.SetHeight(msg.Height - 16)
+		cols[1].Width = msg.Width - 30
+		m.table.SetHeight(msg.Height - 18)
 		m.table, cmd = m.table.Update(msg)
 		cmds = append(cmds, cmd)
 
@@ -258,6 +258,7 @@ func (m model) View() string {
 		return "powered by it creates media\n"
 	}
 	var b strings.Builder
+	b.WriteRune('\n')
 	header := lipgloss.NewStyle().
 		Align(lipgloss.Center).
 		Width(m.width).
@@ -267,7 +268,7 @@ func (m model) View() string {
 	clock := lipgloss.NewStyle().
 		Align(lipgloss.Center).
 		Width(m.width).
-		Bold(true).BorderBottom(true).
+		Bold(true).Border(lipgloss.DoubleBorder(), true, false, false, false).
 		Render(m.clock.View())
 	b.WriteString(clock)
 	b.WriteRune('\n')
@@ -312,7 +313,7 @@ func (m model) View() string {
 	footer := lipgloss.NewStyle().
 		Align(lipgloss.Right).
 		Width(m.width).
-		Render("powered by it creates media")
+		Render(fmt.Sprintf("Version %s, powered by it creates media", version))
 	b.WriteString(footer)
 	return b.String()
 }

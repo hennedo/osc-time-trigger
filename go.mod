@@ -1,4 +1,4 @@
-module example.com
+module github.com/hennedo/osc-time-trigger
 
 go 1.22.4
 
