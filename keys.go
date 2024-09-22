@@ -43,7 +43,7 @@ var keys = keyMap{
 	),
 	Enter: key.NewBinding(
 		key.WithKeys("enter"),
-		key.WithHelp("enter", "enter to confirm"),
+		key.WithHelp("enter", "trigger manually"),
 	),
 	Esc: key.NewBinding(
 		key.WithKeys("esc"),
