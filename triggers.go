@@ -18,6 +18,15 @@ type TriggerPoint struct {
 	Done bool      `yaml:"-"`
 }
 
+func (t TriggerPoint) Trigger(host string, port int) {
+	client := osc.NewClient(host, port)
+	msg := osc.NewMessage(t.Path)
+	err := client.Send(msg)
+	if err != nil {
+		LOG(err.Error())
+	}
+}
+
 func TriggerFromString(path, t string) TriggerPoint {
 	sparts := strings.Split(t, ":")
 	parts := make([]int, 3)
@@ -106,12 +115,7 @@ func (t *Triggers) Start() {
 					if !point.Done && point.Time.Before(time.Now()) {
 						LOG(fmt.Sprintf("sending point %s at %s", point.Path, point.Time.String()))
 						point.Done = true
-						client := osc.NewClient(t.Host, t.Port)
-						msg := osc.NewMessage(point.Path)
-						err := client.Send(msg)
-						if err != nil {
-							LOG(err.Error())
-						}
+						point.Trigger(t.Host, t.Port)
 						t.points[i] = point
 					}
 				}

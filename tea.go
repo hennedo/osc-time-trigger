@@ -220,6 +220,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.showCloseConfirm {
 				return m, tea.Quit
 			}
+			if len(m.triggers.GetTriggers()) > 0 {
+				m.triggers.GetTriggers()[m.table.Cursor()].Trigger(m.host, m.port)
+			}
 		case key.Matches(msg, m.keys.Esc):
 			if m.showCloseConfirm {
 				m.showCloseConfirm = false
