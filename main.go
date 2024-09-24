@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -29,14 +30,17 @@ func main() {
 	}
 	config, err := LoadConfig()
 	if err != nil {
-		fmt.Println("Couldn't open config file:", err)
-		os.Exit(1)
+		if !errors.Is(err, YamlError{}) {
+			fmt.Println("Couldn't open config file:", err)
+			os.Exit(1)
+		}
+		config = &Config{
+			Host: "127.0.0.1",
+			Port: 8000,
+		}
 	}
 	if _, err := tea.NewProgram(initialModel(*config)).Run(); err != nil {
 		fmt.Printf("Could not start program :(\n%v\n", err)
 		os.Exit(1)
 	}
 }
-
-// pause 5min warten, dann werbung
-// 25min vor show mit werbung ende 3mal laufen 5min nach einlass starten

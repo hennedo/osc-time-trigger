@@ -13,6 +13,13 @@ type Config struct {
 	Port   int            `yaml:"port"`
 }
 
+type YamlError struct {
+}
+
+func (e YamlError) Error() string {
+	return ""
+}
+
 func LoadConfig() (*Config, error) {
 	f, err := os.Open("osctrigger_config.yaml")
 	if err != nil {
@@ -27,7 +34,7 @@ func LoadConfig() (*Config, error) {
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
-		return nil, err
+		return nil, YamlError{}
 	}
 	return &cfg, nil
 }
