@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -85,6 +84,10 @@ func (t *Triggers) SetPoint(index int, tp TriggerPoint) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 	t.points[index] = tp
+
+	sort.SliceStable(t.points, func(i, j int) bool {
+		return t.points[i].Time.Before(t.points[j].Time)
+	})
 }
 
 func (t *Triggers) GetTriggers() []TriggerPoint {
@@ -113,7 +116,6 @@ func (t *Triggers) Start() {
 						continue
 					}
 					if !point.Done && point.Time.Before(time.Now()) {
-						LOG(fmt.Sprintf("sending point %s at %s", point.Path, point.Time.String()))
 						point.Done = true
 						point.Trigger(t.Host, t.Port)
 						t.points[i] = point
