@@ -73,7 +73,6 @@ func (m *model) save() {
 	if err != nil {
 		LOG(err.Error())
 	} else {
-		LOG("success")
 		m.configChanged = false
 	}
 }
@@ -160,6 +159,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cols[1].Width = msg.Width - 30
 		m.table.SetHeight(msg.Height - 18)
 		m.table, cmd = m.table.Update(msg)
+		cmds = append(cmds, tea.ClearScreen)
 		cmds = append(cmds, cmd)
 
 	case tea.KeyMsg:
