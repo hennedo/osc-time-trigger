@@ -254,22 +254,31 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.displaySaved = 2
 			m.save()
 		case key.Matches(msg, m.keys.Edit):
-			m.editIndex = m.table.Cursor()
-			m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)
-			m.inputs[3].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Time.Format("15:04:05"))
-			m, cmd = m.focusInput(2)
-			cmds = append(cmds, cmd)
+			if len(m.triggers.GetTriggers()) > 0 {
+				m.editIndex = m.table.Cursor()
+				m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)
+				m.inputs[3].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Time.Format("15:04:05"))
+				m, cmd = m.focusInput(2)
+				cmds = append(cmds, cmd)
+			} else {
+				m.editIndex = -1
+			}
 		case key.Matches(msg, m.keys.Copy):
 			if len(m.triggers.GetTriggers()) > 0 {
 				m.inputs[2].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Path)
 				m.inputs[3].SetValue(m.triggers.GetTriggers()[m.table.Cursor()].Time.Format("15:04:05"))
 				m, cmd = m.focusInput(2)
 				cmds = append(cmds, cmd)
+			} else {
+				m.editIndex = -1
 			}
 		case key.Matches(msg, m.keys.Delete):
 			if len(m.triggers.GetTriggers()) > 0 {
 				m.triggers.RemovePoint(m.table.Cursor())
 				m.table.SetRows(m.triggers.ToRows())
+			}
+			if m.editIndex > len(m.triggers.GetTriggers())-1 {
+				m.editIndex = -1
 			}
 			m.configChanged = true
 		}
