@@ -1,5 +1,5 @@
 osc-time-trigger*
-osctrigger_config.yaml
+osctrigger_config.yaml*
 *.swp
 debug.log
 .DS_Store
