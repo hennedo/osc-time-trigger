@@ -40,7 +40,7 @@ func LoadConfig() (*Config, error) {
 }
 
 func SaveConfig(config Config) error {
-	f, err := os.OpenFile("osctrigger_config.yaml", os.O_CREATE|os.O_RDWR, 0644)
+	f, err := os.OpenFile("osctrigger_config.yaml", os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
